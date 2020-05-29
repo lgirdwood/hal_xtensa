@@ -1,0 +1,11 @@
+--- src/platform/haswell/include/arch/xtensa/config/core-isa-hsw.h
++++ src/platform/haswell/include/arch/xtensa/config/core-isa-hsw.h
+@@ -89,7 +89,7 @@
+ #define XCHAL_HAVE_PSO			0	/* Power Shut-Off */
+ #define XCHAL_HAVE_PSO_CDM		0	/* core/debug/mem pwr domains */
+ #define XCHAL_HAVE_PSO_FULL_RETENTION	0	/* all regs preserved on PSO */
+-#define XCHAL_HAVE_THREADPTR		1	/* THREADPTR register */
++#define XCHAL_HAVE_THREADPTR		0	/* THREADPTR register */
+ #define XCHAL_HAVE_BOOLEANS		1	/* boolean registers */
+ #define XCHAL_HAVE_CP			1	/* CPENABLE reg (coprocessor) */
+ #define XCHAL_CP_MAXCFG			2	/* max allowed cp id plus one */
