@@ -25,16 +25,22 @@
    and earlier Xtensa releases.  It includes only a subset of the
    available header files.  */
 
-#if !defined __XCC__
+#if !defined __XCC__ || defined(__XCC_CLANG__)
 
 #ifndef _XTENSA_BASE_HEADER
 #define _XTENSA_BASE_HEADER
 
 #ifdef __XTENSA__
 
+#if defined(__has_include) && __has_include(<xtensa/tie/xt_core.h>)
 #include <xtensa/tie/xt_core.h>
+#endif
+#if defined(__has_include) && __has_include(<xtensa/tie/xt_misc.h>)
 #include <xtensa/tie/xt_misc.h>
+#endif
+#if defined(__has_include) && __has_include(<xtensa/tie/xt_booleans.h>)
 #include <xtensa/tie/xt_booleans.h>
+#endif
 
 #endif /* __XTENSA__ */
 #endif /* !_XTENSA_BASE_HEADER */
