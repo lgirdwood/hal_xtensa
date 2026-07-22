@@ -125,16 +125,22 @@ xthal_spill_registers_into_stack_nw:	// BACKWARD COMPATIBILITY ONLY - see above
 
 	rsr.windowbase	a2
 	addi	a2, a2, 1
-	ssr	a2		// sar = WINDOWBASE + 1
-	rsr.windowstart	a3
-	srl	a2, a3		// a2 is 0... | 000000xxxxxxxxxx = WINDOWSTART >> sar
-	sll	a3, a3		// a3 is 1yyyyy0000000000 | 0... = WINDOWSTART << (32 - sar)
-	bgez	a3, .Linvalid_ws	// verify that msbit is indeed set
+	ssr	a2		// SAR = 32 - (WINDOWBASE + 1)
+	rsr.windowstart	a3	// a3 = WINDOWSTART
 
-	movi	a4, 32-WSBITS	// LLVM IAS: srli only takes [0,15]; use SSR+SRL for arbitrary shift
-	ssr	a4
-	srl	a3, a3		// a3 is 0... | 1yyyyy0000000000 = a3 >> (32-NAREG/4)
-	or	a2, a2, a3		// a2 is 0... | 1yyyyyxxxxxxxxxx
+#if WSBITS == 8
+	slli	a2, a3, 8
+	or	a3, a3, a2
+	slli	a2, a3, 16
+	or	a3, a3, a2
+#elif WSBITS == 16
+	slli	a2, a3, 16
+	or	a3, a3, a2
+#endif
+
+	src	a2, a3, a3	// rotate WINDOWSTART right by (WINDOWBASE + 1)
+	extui	a2, a2, 0, WSBITS
+	bbci	a2, WSBITS-1, .Linvalid_ws	// verify that msbit is set
 
 	/*
 	 *	FIND THE FIRST ONE
