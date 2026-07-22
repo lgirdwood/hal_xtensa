@@ -25,16 +25,19 @@
    and earlier Xtensa releases.  It includes only a subset of the
    available header files.  */
 
-#if !defined __XCC__
+#if !defined __XCC__ || defined __XCC_CLANG__
 
 #ifndef _XTENSA_BASE_HEADER
 #define _XTENSA_BASE_HEADER
 
 #ifdef __XTENSA__
 
+/* xtensa/tie/*.h are XCC-toolchain-only headers; skip for LLVM Clang builds */
+#ifndef __XCC_CLANG__
 #include <xtensa/tie/xt_core.h>
 #include <xtensa/tie/xt_misc.h>
 #include <xtensa/tie/xt_booleans.h>
+#endif /* !__XCC_CLANG__ */
 
 #endif /* __XTENSA__ */
 #endif /* !_XTENSA_BASE_HEADER */
