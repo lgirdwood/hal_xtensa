@@ -131,7 +131,9 @@ xthal_spill_registers_into_stack_nw:	// BACKWARD COMPATIBILITY ONLY - see above
 	sll	a3, a3		// a3 is 1yyyyy0000000000 | 0... = WINDOWSTART << (32 - sar)
 	bgez	a3, .Linvalid_ws	// verify that msbit is indeed set
 
-	srli	a3, a3, 32-WSBITS	// a3 is 0... | 1yyyyy0000000000 = a3 >> (32-NAREG/4)
+	movi	a4, 32-WSBITS	// LLVM IAS: srli only takes [0,15]; use SSR+SRL for arbitrary shift
+	ssr	a4
+	srl	a3, a3		// a3 is 0... | 1yyyyy0000000000 = a3 >> (32-NAREG/4)
 	or	a2, a2, a3		// a2 is 0... | 1yyyyyxxxxxxxxxx
 
 	/*
